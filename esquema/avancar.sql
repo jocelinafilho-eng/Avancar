@@ -109,3 +109,17 @@ CREATE TABLE IF NOT EXISTS `tarefa` (
   KEY `micrometa_id` (`micrometa_id`),
   CONSTRAINT `tarefa_ibfk_1` FOREIGN KEY (`micrometa_id`) REFERENCES `micrometa` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `template_tarefa` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `usuario_id` int(11) NOT NULL,
+  `nome_template` varchar(255) NOT NULL,
+  `nome_tarefa` varchar(255) NOT NULL,
+  `tipo_temporal` enum('arbitraria','periodo','hora_marcada') NOT NULL,
+  `periodo` enum('manha','tarde','noite') DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `duracao_estimada` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `usuario_id` (`usuario_id`),
+  CONSTRAINT `template_tarefa_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuario` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

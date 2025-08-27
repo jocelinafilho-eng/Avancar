@@ -5,7 +5,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3>Progresso por Pilar (Dados Mockados)</h3>
+        <h3>Tarefas por Pilar</h3>
     </div>
     <div class="card-body">
         <canvas id="graficoProgressoPilares"></canvas>
@@ -16,26 +16,36 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('graficoProgressoPilares').getContext('2d');
-    const dados = <?php echo json_encode($dados_grafico['dados']); ?>;
     const labels = <?php echo json_encode($dados_grafico['labels']); ?>;
+    const dadosConcluidas = <?php echo json_encode($dados_grafico['dados_concluidas']); ?>;
+    const dadosTotais = <?php echo json_encode($dados_grafico['dados_totais']); ?>;
+    const cores = <?php echo json_encode($dados_grafico['cores']); ?>;
 
     new Chart(ctx, {
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [{
-                label: 'Progresso (%)',
-                data: dados,
-                backgroundColor: 'rgba(107, 70, 193, 0.5)',
-                borderColor: 'rgba(107, 70, 193, 1)',
-                borderWidth: 1
-            }]
+            datasets: [
+                {
+                    label: 'Tarefas Concluídas',
+                    data: dadosConcluidas,
+                    backgroundColor: cores.map(cor => cor + 'BF'), // Adiciona transparência
+                    borderColor: cores,
+                    borderWidth: 1
+                },
+                {
+                    label: 'Tarefas Totais',
+                    data: dadosTotais,
+                    backgroundColor: 'rgba(200, 200, 200, 0.2)',
+                    borderColor: 'rgba(200, 200, 200, 1)',
+                    borderWidth: 1
+                }
+            ]
         },
         options: {
             scales: {
                 y: {
-                    beginAtZero: true,
-                    max: 100
+                    beginAtZero: true
                 }
             }
         }

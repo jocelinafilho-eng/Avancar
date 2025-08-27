@@ -16,20 +16,21 @@ class ProgressoControlador {
     }
 
     public function index() {
-        // Lógica para buscar dados de progresso
-        // Esta lógica será complexa e precisará de queries dedicadas no futuro.
-        // Por agora, vamos passar dados mockados para o Chart.js
+        $stmt = $this->pilar_modelo->obterEstatisticasPorPilar($_SESSION['usuario_id']);
+        $stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $pilares = $this->pilar_modelo->lerPorUsuario($_SESSION['usuario_id'])->fetchAll(PDO::FETCH_ASSOC);
         $dados_grafico = [
             'labels' => [],
-            'dados' => []
+            'dados_concluidas' => [],
+            'dados_totais' => [],
+            'cores' => []
         ];
 
-        foreach($pilares as $pilar) {
-            $dados_grafico['labels'][] = $pilar['nome'];
-            // Valor mockado de progresso
-            $dados_grafico['dados'][] = rand(10, 100);
+        foreach($stats as $stat) {
+            $dados_grafico['labels'][] = $stat['nome'];
+            $dados_grafico['dados_concluidas'][] = $stat['tarefas_concluidas'];
+            $dados_grafico['dados_totais'][] = $stat['total_tarefas'];
+            $dados_grafico['cores'][] = $stat['cor'];
         }
 
         $this->render('progresso', [

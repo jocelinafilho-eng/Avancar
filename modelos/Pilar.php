@@ -51,5 +51,29 @@ class Pilar {
         return false;
     }
 
+    public function obterEstatisticasPorPilar($usuario_id) {
+        $query = "
+            SELECT
+                p.nome,
+                p.cor,
+                COUNT(t.id) as total_tarefas,
+                SUM(CASE WHEN t.concluida = 1 THEN 1 ELSE 0 END) as tarefas_concluidas
+            FROM pilar p
+            LEFT JOIN categoria c ON p.id = c.pilar_id
+            LEFT JOIN meta m ON c.id = m.categoria_id
+            LEFT JOIN micrometa mm ON m.id = mm.meta_id
+            LEFT JOIN tarefa t ON mm.id = t.micrometa_id
+            WHERE p.usuario_id = :usuario_id
+            GROUP BY p.id
+            ORDER BY p.nome
+        ";
+
+        $stmt = $this->conexao->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     // TODO: Implementar métodos para ler um, atualizar e deletar
 }
