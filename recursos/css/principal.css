@@ -1,0 +1,105 @@
+:root {
+    --fundo-principal: #0d1421;
+    --fundo-secundario: #1a2332;
+    --bordas-separadores: #2d3748;
+    --hover-focus: #4a5568;
+    --primaria: #6b46c1;
+    --primaria-hover: #7c3aed;
+    --verde: #4caf50;
+    --azul: #2196f3;
+    --laranja: #ff9800;
+    --vermelho: #f44336;
+    --texto-principal: #ffffff;
+    --texto-secundario: #e2e8f0;
+    --texto-terciario: #cbd5e0;
+    --texto-desabilitado: #718096;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--fundo-principal);
+    color: var(--texto-secundario);
+    margin: 0;
+    padding: 0;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--fundo-secundario);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--hover-focus);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primaria);
+}
+
+.container {
+    display: flex;
+}
+
+.menu-lateral {
+    width: 280px;
+    background-color: var(--fundo-secundario);
+    height: 100vh;
+    position: fixed;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.conteudo-principal {
+    margin-left: 280px;
+    padding: 24px;
+    width: calc(100% - 280px);
+}
+
+/* Dashboard Styles */
+.dashboard-cabecalho {
+    margin-bottom: 24px;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.card {
+    background-color: var(--fundo-secundario);
+    border-radius: 8px;
+    padding: 24px;
+    border: 1px solid var(--bordas-separadores);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--bordas-separadores);
+    padding-bottom: 16px;
+}
+
+.card-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.dashboard-pilares .pilares-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.pilar-card {
+    border-left: 5px solid var(--primaria);
+}
