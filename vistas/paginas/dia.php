@@ -123,12 +123,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // Reverter o checkbox em caso de erro
                     this.checked = !this.checked;
-                    alert('Erro ao atualizar a tarefa.');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Erro ao atualizar a tarefa.',
+                        background: 'var(--fundo-secundario)',
+                        color: 'var(--texto-principal)'
+                    });
                 }
             })
             .catch(error => {
                 this.checked = !this.checked;
-                alert('Erro de conexão.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Erro de conexão.',
+                    background: 'var(--fundo-secundario)',
+                    color: 'var(--texto-principal)'
+                });
             });
         });
     });
