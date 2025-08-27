@@ -5,20 +5,19 @@
 
 <div class="dia-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
 
-    <div class="coluna-periodos">
+    <div class="coluna-tarefas">
         <!-- Tarefas com Hora Marcada -->
         <div class="card" style="margin-bottom: 24px;">
-            <div class="card-header">
-                <h3><i class="fas fa-clock"></i> Hora Marcada</h3>
-            </div>
-            <div class="card-body">
-                <?php if (empty($tarefas['hora_marcada'])): ?>
-                    <p>Nenhuma tarefa com hora marcada.</p>
+            <div class="card-header"><h3><i class="fas fa-clock"></i> Hora Marcada</h3></div>
+            <div class="card-body" id="lista-tarefas-hora_marcada">
+                <?php if (empty($data['tarefas']['hora_marcada'])): ?>
+                    <p class="sem-tarefas">Nenhuma tarefa com hora marcada.</p>
                 <?php else: ?>
-                    <?php foreach($tarefas['hora_marcada'] as $tarefa): ?>
-                        <div class="tarefa-item">
+                    <?php foreach($data['tarefas']['hora_marcada'] as $tarefa): ?>
+                        <div class="tarefa-item" data-id-tarefa="<?php echo $tarefa['id']; ?>">
                             <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
-                            <label for="tarefa-<?php echo $tarefa['id']; ?>"><?php echo htmlspecialchars(substr($tarefa['hora_inicio'], 0, 5)); ?> - <?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                            <label for="tarefa-<?php echo $tarefa['id']; ?>" class="<?php echo $tarefa['concluida'] ? 'concluida' : ''; ?>"><?php echo htmlspecialchars(substr($tarefa['hora_inicio'], 0, 5)); ?> - <?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                            <button class="btn-remover-tarefa" data-id="<?php echo $tarefa['id']; ?>">&times;</button>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -27,17 +26,16 @@
 
         <!-- Tarefas Arbitrárias -->
         <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-tasks"></i> Arbitrárias</h3>
-            </div>
-            <div class="card-body">
-                 <?php if (empty($tarefas['arbitraria'])): ?>
-                    <p>Nenhuma tarefa arbitrária.</p>
+            <div class="card-header"><h3><i class="fas fa-tasks"></i> Arbitrárias</h3></div>
+            <div class="card-body" id="lista-tarefas-arbitraria">
+                 <?php if (empty($data['tarefas']['arbitraria'])): ?>
+                    <p class="sem-tarefas">Nenhuma tarefa arbitrária.</p>
                 <?php else: ?>
-                    <?php foreach($tarefas['arbitraria'] as $tarefa): ?>
-                        <div class="tarefa-item">
+                    <?php foreach($data['tarefas']['arbitraria'] as $tarefa): ?>
+                        <div class="tarefa-item" data-id-tarefa="<?php echo $tarefa['id']; ?>">
                             <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
-                            <label for="tarefa-<?php echo $tarefa['id']; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                            <label for="tarefa-<?php echo $tarefa['id']; ?>" class="<?php echo $tarefa['concluida'] ? 'concluida' : ''; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                            <button class="btn-remover-tarefa" data-id="<?php echo $tarefa['id']; ?>">&times;</button>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -45,104 +43,102 @@
         </div>
     </div>
 
-    <div class="coluna-arbitrarias">
+    <div class="coluna-acoes">
+        <!-- Formulário de Nova Tarefa -->
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header"><h3><i class="fas fa-plus-circle"></i> Adicionar Nova Tarefa</h3></div>
+            <div class="card-body">
+                <form id="form-nova-tarefa" class="form-com-feedback">
+                    <div class="campo-grupo">
+                        <label for="nome-tarefa">Nome da Tarefa</label>
+                        <input type="text" name="nome" id="nome-tarefa" required class="campo-input">
+                    </div>
+                    <div class="campo-grupo">
+                        <label for="tipo-temporal">Tipo</label>
+                        <select name="tipo_temporal" id="tipo-temporal" class="campo-input">
+                            <option value="periodo">Período</option>
+                            <option value="hora_marcada">Hora Marcada</option>
+                            <option value="arbitraria">Arbitrária</option>
+                        </select>
+                    </div>
+                    <div id="campos-periodo" class="campos-condicionais">
+                        <div class="campo-grupo">
+                            <label for="periodo">Período</label>
+                            <select name="periodo" id="periodo" class="campo-input">
+                                <option value="manha">Manhã</option>
+                                <option value="tarde">Tarde</option>
+                                <option value="noite">Noite</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="campos-hora-marcada" class="campos-condicionais" style="display: none;">
+                        <div class="campo-grupo">
+                            <label for="hora-inicio">Hora de Início</label>
+                            <input type="time" name="hora_inicio" id="hora-inicio" class="campo-input">
+                        </div>
+                         <div class="campo-grupo">
+                            <label for="duracao-estimada">Duração (minutos)</label>
+                            <input type="number" name="duracao_estimada" id="duracao-estimada" class="campo-input" value="30">
+                        </div>
+                    </div>
+                    <input type="hidden" name="data_execucao" value="<?php echo date('Y-m-d'); ?>">
+                    <button type="submit" class="btn btn-primario btn-com-feedback" style="width:100%;">
+                        <span class="btn-texto">Adicionar Tarefa</span>
+                        <span class="btn-spinner" style="display: none;"><i class="fas fa-spinner fa-spin"></i></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <!-- Tarefas por Período -->
         <div class="card">
-            <div class="card-header">
-                <h3><i class="fas fa-sun"></i> Períodos</h3>
-            </div>
+            <div class="card-header"><h3><i class="fas fa-sun"></i> Períodos</h3></div>
             <div class="card-body">
                 <h4>Manhã</h4>
-                <?php if (empty($tarefas['manha'])): ?>
-                    <p>Nenhuma tarefa para a manhã.</p>
-                <?php else: ?>
-                    <?php foreach($tarefas['manha'] as $tarefa): ?>
-                        <div class="tarefa-item">
-                            <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
-                            <label for="tarefa-<?php echo $tarefa['id']; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <div id="lista-tarefas-manha">
+                    <?php if (empty($data['tarefas']['manha'])): ?>
+                        <p class="sem-tarefas">Nenhuma tarefa para a manhã.</p>
+                    <?php else: ?>
+                        <?php foreach($data['tarefas']['manha'] as $tarefa): ?>
+                            <div class="tarefa-item" data-id-tarefa="<?php echo $tarefa['id']; ?>">
+                                <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
+                                <label for="tarefa-<?php echo $tarefa['id']; ?>" class="<?php echo $tarefa['concluida'] ? 'concluida' : ''; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                                <button class="btn-remover-tarefa" data-id="<?php echo $tarefa['id']; ?>">&times;</button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
                 <hr style="border-color: var(--bordas-separadores); margin: 1rem 0;">
                 <h4>Tarde</h4>
-                 <?php if (empty($tarefas['tarde'])): ?>
-                    <p>Nenhuma tarefa para a tarde.</p>
-                <?php else: ?>
-                    <?php foreach($tarefas['tarde'] as $tarefa): ?>
-                        <div class="tarefa-item">
-                            <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
-                            <label for="tarefa-<?php echo $tarefa['id']; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                 <div id="lista-tarefas-tarde">
+                    <?php if (empty($data['tarefas']['tarde'])): ?>
+                        <p class="sem-tarefas">Nenhuma tarefa para a tarde.</p>
+                    <?php else: ?>
+                        <?php foreach($data['tarefas']['tarde'] as $tarefa): ?>
+                            <div class="tarefa-item" data-id-tarefa="<?php echo $tarefa['id']; ?>">
+                                <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
+                                <label for="tarefa-<?php echo $tarefa['id']; ?>" class="<?php echo $tarefa['concluida'] ? 'concluida' : ''; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                                <button class="btn-remover-tarefa" data-id="<?php echo $tarefa['id']; ?>">&times;</button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
                 <hr style="border-color: var(--bordas-separadores); margin: 1rem 0;">
                 <h4>Noite</h4>
-                <?php if (empty($tarefas['noite'])): ?>
-                    <p>Nenhuma tarefa para a noite.</p>
-                <?php else: ?>
-                    <?php foreach($tarefas['noite'] as $tarefa): ?>
-                        <div class="tarefa-item">
-                            <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
-                            <label for="tarefa-<?php echo $tarefa['id']; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <div id="lista-tarefas-noite">
+                    <?php if (empty($data['tarefas']['noite'])): ?>
+                        <p class="sem-tarefas">Nenhuma tarefa para a noite.</p>
+                    <?php else: ?>
+                        <?php foreach($data['tarefas']['noite'] as $tarefa): ?>
+                            <div class="tarefa-item" data-id-tarefa="<?php echo $tarefa['id']; ?>">
+                                <input type="checkbox" id="tarefa-<?php echo $tarefa['id']; ?>" data-id="<?php echo $tarefa['id']; ?>" <?php echo $tarefa['concluida'] ? 'checked' : ''; ?>>
+                                <label for="tarefa-<?php echo $tarefa['id']; ?>" class="<?php echo $tarefa['concluida'] ? 'concluida' : ''; ?>"><?php echo htmlspecialchars($tarefa['nome']); ?></label>
+                                <button class="btn-remover-tarefa" data-id="<?php echo $tarefa['id']; ?>">&times;</button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const checkboxes = document.querySelectorAll('.tarefa-item input[type="checkbox"]');
-    checkboxes.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            const id_tarefa = this.dataset.id;
-            const concluida = this.checked ? 1 : 0;
-
-            const formData = new FormData();
-            formData.append('id_tarefa', id_tarefa);
-            formData.append('concluida', concluida);
-
-            fetch('/tarefa/actualizarEstado', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sucesso) {
-                    // Mudar o estilo da label
-                    const label = this.nextElementSibling;
-                    if (concluida) {
-                        label.style.textDecoration = 'line-through';
-                        label.style.color = 'var(--texto-desabilitado)';
-                    } else {
-                        label.style.textDecoration = 'none';
-                        label.style.color = 'var(--texto-secundario)';
-                    }
-                } else {
-                    // Reverter o checkbox em caso de erro
-                    this.checked = !this.checked;
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Erro ao atualizar a tarefa.',
-                        background: 'var(--fundo-secundario)',
-                        color: 'var(--texto-principal)'
-                    });
-                }
-            })
-            .catch(error => {
-                this.checked = !this.checked;
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Erro de conexão.',
-                    background: 'var(--fundo-secundario)',
-                    color: 'var(--texto-principal)'
-                });
-            });
-        });
-    });
-});
-</script>

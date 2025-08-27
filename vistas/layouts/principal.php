@@ -10,7 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
     <div class="container">
         <?php include_once ROOT_PATH . '/vistas/componentes/menu-lateral.php'; ?>
         <main class="conteudo-principal">
@@ -23,8 +22,13 @@
         </main>
     </div>
     <script>
-        document.querySelector('.menu-toggle').addEventListener('click', function() {
-            document.querySelector('.menu-lateral').classList.toggle('aberto');
+        document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.querySelector('.menu-toggle-btn');
+            if(toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    document.body.classList.toggle('menu-recolhido');
+                });
+            }
         });
     </script>
     <?php if (isset($_SESSION['flash_message'])): ?>
@@ -43,5 +47,20 @@
         </script>
         <?php unset($_SESSION['flash_message']); ?>
     <?php endif; ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-com-feedback');
+        forms.forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitBtn = form.querySelector('button[type="submit"].btn-com-feedback');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('a-processar');
+                }
+            });
+        });
+    });
+    </script>
+    <script src="/recursos/js/app.js"></script>
 </body>
 </html>

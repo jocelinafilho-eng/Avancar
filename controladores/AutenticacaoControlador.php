@@ -58,10 +58,21 @@ class AutenticacaoControlador {
         $this->usuario_modelo->nome = $_POST['nome'] ?? '';
         $this->usuario_modelo->email = $_POST['email'] ?? '';
         $this->usuario_modelo->palavra_passe = $_POST['palavra_passe'] ?? '';
+        $confirmar_palavra_passe = $_POST['confirmar_palavra_passe'] ?? '';
 
         // Validação simples
-        if (empty($this->usuario_modelo->nome) || empty($this->usuario_modelo->email) || empty($this->usuario_modelo->palavra_passe)) {
+        if (empty($this->usuario_modelo->nome) || empty($this->usuario_modelo->email) || empty($this->usuario_modelo->palavra_passe) || empty($confirmar_palavra_passe)) {
             $this->mostrarPagina('registo', ['erro' => 'Todos os campos são obrigatórios.']);
+            return;
+        }
+
+        if (strlen($this->usuario_modelo->palavra_passe) < 8) {
+            $this->mostrarPagina('registo', ['erro' => 'A palavra-passe deve ter pelo menos 8 caracteres.']);
+            return;
+        }
+
+        if ($this->usuario_modelo->palavra_passe !== $confirmar_palavra_passe) {
+            $this->mostrarPagina('registo', ['erro' => 'As palavras-passe não correspondem.']);
             return;
         }
 

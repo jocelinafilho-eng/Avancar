@@ -28,5 +28,19 @@
         </script>
         <?php unset($_SESSION['flash_message']); ?>
     <?php endif; ?>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const forms = document.querySelectorAll('.form-com-feedback');
+        forms.forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitBtn = form.querySelector('button[type="submit"].btn-com-feedback');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('a-processar');
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
