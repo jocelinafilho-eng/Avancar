@@ -114,8 +114,18 @@ a:hover { color: var(--primaria-hover); }
 }
 
 /* Forms */
-.campo-grupo { margin-bottom: 1rem; }
+.campo-grupo { margin-bottom: 1rem; position: relative; }
 .campo-grupo label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+.campo-grupo.com-icone .fas {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--texto-terciario);
+}
+.campo-grupo.com-icone input {
+    padding-left: 40px;
+}
 .campo-grupo input, .campo-grupo select {
     width: 100%;
     padding: 0.75rem;

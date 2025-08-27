@@ -47,6 +47,10 @@ class PilarControlador {
             $this->pilar_modelo->cor = $_POST['cor'];
 
             if ($this->pilar_modelo->criar()) {
+                $_SESSION['flash_message'] = [
+                    'tipo' => 'sucesso',
+                    'mensagem' => 'Pilar criado com sucesso!'
+                ];
                 header('Location: /pilares');
                 exit();
             } else {

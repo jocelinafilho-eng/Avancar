@@ -87,8 +87,14 @@ class AutenticacaoControlador {
     }
 
     private function mostrarPagina($view, $dados = []) {
-        extract($dados);
-        // Usaremos um layout de autenticação específico
-        include_once ROOT_PATH . '/vistas/paginas/' . $view . '.php';
+        $data = $dados;
+        $data['view'] = $view;
+        if ($view == 'login') {
+            $data['titulo'] = 'Login';
+        } else {
+            $data['titulo'] = 'Registo';
+        }
+        extract($data);
+        include_once ROOT_PATH . '/vistas/layouts/autenticacao.php';
     }
 }

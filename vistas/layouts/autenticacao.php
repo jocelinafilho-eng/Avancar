@@ -3,30 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avançar</title>
+    <title><?php echo isset($titulo) ? $titulo . ' - Avançar' : 'Avançar'; ?></title>
     <link rel="stylesheet" href="/recursos/css/principal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/recursos/css/responsivo.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-    <button class="menu-toggle"><i class="fas fa-bars"></i></button>
-    <div class="container">
-        <?php include_once ROOT_PATH . '/vistas/componentes/menu-lateral.php'; ?>
-        <main class="conteudo-principal">
-            <?php include_once ROOT_PATH . '/vistas/componentes/cabecalho.php'; ?>
-            <div class="pagina-conteudo">
-                <!-- O conteúdo da página específica será carregado aqui -->
-                <?php if (isset($view)) include_once ROOT_PATH . '/vistas/paginas/' . $view . '.php'; ?>
-            </div>
-            <?php include_once ROOT_PATH . '/vistas/componentes/rodape.php'; ?>
-        </main>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+    <div class="auth-container">
+        <?php if (isset($view)) include_once ROOT_PATH . '/vistas/paginas/' . $view . '.php'; ?>
     </div>
-    <script>
-        document.querySelector('.menu-toggle').addEventListener('click', function() {
-            document.querySelector('.menu-lateral').classList.toggle('aberto');
-        });
-    </script>
     <?php if (isset($_SESSION['flash_message'])): ?>
         <script>
             Swal.fire({
