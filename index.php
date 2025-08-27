@@ -23,9 +23,18 @@ spl_autoload_register(function ($className) {
 $url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : 'dashboard';
 $urlParts = explode('/', $url);
 
-$controladorNome = ucfirst(strtolower($urlParts[0] ?? 'Dashboard')) . 'Controlador';
-$metodoNome = $urlParts[1] ?? 'index';
+$controllerName = $urlParts[0] ?? 'dashboard';
+$methodName = $urlParts[1] ?? 'index';
 $parametros = array_slice($urlParts, 2);
+
+// Casos especiais para autenticação
+if ($controllerName == 'login' || $controllerName == 'registo' || $controllerName == 'logout') {
+    $controladorNome = 'AutenticacaoControlador';
+    $metodoNome = $controllerName;
+} else {
+    $controladorNome = ucfirst(strtolower($controllerName)) . 'Controlador';
+    $metodoNome = $methodName;
+}
 
 // Verifica se o controlador existe
 if (class_exists($controladorNome)) {
