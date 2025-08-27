@@ -103,3 +103,62 @@ body {
 .pilar-card {
     border-left: 5px solid var(--primaria);
 }
+
+/* Pilares Page Styles */
+.pilares-container {
+    margin-top: 24px;
+}
+
+.pilar-card-container {
+    margin-bottom: 24px;
+}
+
+.categorias-container {
+    margin-left: 24px;
+    margin-top: 16px;
+}
+
+.categoria-card {
+    margin-bottom: 16px;
+    background-color: var(--fundo-principal);
+}
+
+.subcategoria-lista {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+}
+
+.subcategoria-lista li {
+    padding: 8px;
+    border-bottom: 1px solid var(--bordas-separadores);
+}
+
+.subcategoria-lista li:last-child {
+    border-bottom: none;
+}
+
+.form-inline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.form-inline input[type="text"] {
+    flex-grow: 1;
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--bordas-separadores);
+    background: var(--fundo-secundario);
+    color: var(--texto-principal);
+}
+
+.btn-pequeno {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    background-color: var(--primaria);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
