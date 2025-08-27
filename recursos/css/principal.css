@@ -162,3 +162,38 @@ body {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* Calendar Styles */
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendario-header a {
+    color: var(--primaria-hover);
+    text-decoration: none;
+    font-size: 1.5rem;
+    padding: 0 16px;
+}
+
+.calendario-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.calendario-tabela th, .calendario-tabela td {
+    text-align: center;
+    padding: 16px;
+    border: 1px solid var(--bordas-separadores);
+    width: 14.28%;
+    height: 100px;
+}
+
+.calendario-tabela td.tem-tarefas {
+    background-color: var(--primaria);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}

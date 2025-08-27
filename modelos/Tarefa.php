@@ -87,5 +87,24 @@ class Tarefa {
         return false;
     }
 
+    public function lerPorMes($usuario_id, $mes, $ano) {
+        $query = "
+            SELECT t.data_execucao, COUNT(t.id) as num_tarefas
+            FROM " . $this->tabela . " t
+            JOIN micrometa mm ON t.micrometa_id = mm.id
+            JOIN meta m ON mm.meta_id = m.id
+            WHERE m.usuario_id = :usuario_id AND MONTH(t.data_execucao) = :mes AND YEAR(t.data_execucao) = :ano
+            GROUP BY t.data_execucao
+        ";
+
+        $stmt = $this->conexao->prepare($query);
+        $stmt->bindParam(':usuario_id', $usuario_id);
+        $stmt->bindParam(':mes', $mes);
+        $stmt->bindParam(':ano', $ano);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     // TODO: Implementar outros métodos CRUD e de busca
 }
