@@ -3,6 +3,7 @@
 class TarefaControlador {
     private $db;
     private $tarefa_modelo;
+    private $gamificacao_modelo;
 
     public function __construct() {
         if (!isset($_SESSION['usuario_id'])) {
@@ -12,6 +13,7 @@ class TarefaControlador {
         $database = BaseDados::obterInstancia();
         $this->db = $database->getConexao();
         $this->tarefa_modelo = new Tarefa($this->db);
+        $this->gamificacao_modelo = new Gamificacao($this->db);
     }
 
     public function criar() {
@@ -61,9 +63,11 @@ class TarefaControlador {
             $id_tarefa = $_POST['id_tarefa'];
             $concluida = $_POST['concluida'];
 
-            // Adicionar método no modelo para atualizar
             if ($this->tarefa_modelo->actualizarEstado($id_tarefa, $concluida)) {
-                // Idealmente, responder com JSON para AJAX
+                if ($concluida) {
+                    // Adicionar 10 pontos por tarefa concluída
+                    $this->gamificacao_modelo->adicionarPontos($_SESSION['usuario_id'], 10);
+                }
                 echo json_encode(['sucesso' => true]);
             } else {
                 echo json_encode(['sucesso' => false]);

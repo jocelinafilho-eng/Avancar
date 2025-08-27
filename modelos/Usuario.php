@@ -38,10 +38,20 @@ class Usuario {
     }
 
     public function encontrarPorEmail($email) {
-        $query = "SELECT id, nome, email, palavra_passe FROM " . $this->tabela . " WHERE email = :email LIMIT 1";
+        $query = "SELECT * FROM " . $this->tabela . " WHERE email = :email LIMIT 1";
 
         $stmt = $this->conexao->prepare($query);
         $stmt->bindParam(':email', $email);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function encontrarPorId($id) {
+        $query = "SELECT id, nome, email, pontos, nivel FROM " . $this->tabela . " WHERE id = :id LIMIT 1";
+
+        $stmt = $this->conexao->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
