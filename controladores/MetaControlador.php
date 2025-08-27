@@ -34,6 +34,7 @@ class MetaControlador {
 
     public function criar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json');
             $this->meta_modelo->usuario_id = $_SESSION['usuario_id'];
             $this->meta_modelo->categoria_id = $_POST['categoria_id'];
             $this->meta_modelo->subcategoria_id = !empty($_POST['subcategoria_id']) ? $_POST['subcategoria_id'] : null;
@@ -41,28 +42,33 @@ class MetaControlador {
             $this->meta_modelo->data_inicio = $_POST['data_inicio'];
             $this->meta_modelo->data_fim = $_POST['data_fim'];
 
-            if ($this->meta_modelo->criar()) {
-                header('Location: /metas');
-                exit();
+            $nova_meta_id = $this->meta_modelo->criar();
+
+            if ($nova_meta_id) {
+                echo json_encode(['sucesso' => true, 'meta' => ['id' => $nova_meta_id, 'nome' => $this->meta_modelo->nome]]);
             } else {
-                $this->render('metas', ['erro' => 'Erro ao criar meta.']);
+                echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar meta.']);
             }
+            exit();
         }
     }
 
     public function criarMicro() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json');
             $this->micrometa_modelo->meta_id = $_POST['meta_id'];
             $this->micrometa_modelo->nome = $_POST['nome'];
             $this->micrometa_modelo->data_inicio = $_POST['data_inicio'];
             $this->micrometa_modelo->data_fim = $_POST['data_fim'];
 
-            if ($this->micrometa_modelo->criar()) {
-                header('Location: /metas');
-                exit();
+            $nova_micrometa_id = $this->micrometa_modelo->criar();
+
+            if ($nova_micrometa_id) {
+                echo json_encode(['sucesso' => true, 'micrometa' => ['id' => $nova_micrometa_id, 'nome' => $this->micrometa_modelo->nome]]);
             } else {
-                $this->render('metas', ['erro' => 'Erro ao criar micro-meta.']);
+                echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar micro-meta.']);
             }
+            exit();
         }
     }
 

@@ -16,17 +16,24 @@ class SubcategoriaControlador {
 
     public function criar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json');
             $this->subcategoria_modelo->categoria_id = $_POST['categoria_id'];
             $this->subcategoria_modelo->nome = $_POST['nome'];
 
-            if ($this->subcategoria_modelo->criar()) {
-                header('Location: /pilares'); // Redireciona de volta para a página de pilares
-                exit();
+            $nova_subcategoria_id = $this->subcategoria_modelo->criar();
+
+            if ($nova_subcategoria_id) {
+                echo json_encode([
+                    'sucesso' => true,
+                    'subcategoria' => [
+                        'id' => $nova_subcategoria_id,
+                        'nome' => $this->subcategoria_modelo->nome
+                    ]
+                ]);
             } else {
-                // TODO: Melhorar tratamento de erro
-                header('Location: /pilares?erro=criar_subcategoria');
-                exit();
+                echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar subcategoria.']);
             }
+            exit();
         }
     }
 }

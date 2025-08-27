@@ -45,7 +45,7 @@ class Meta {
         $stmt->bindParam(':data_fim', $this->data_fim);
 
         if ($stmt->execute()) {
-            return true;
+            return $this->conexao->lastInsertId();
         }
 
         printf("Erro: %s.\n", $stmt->error);

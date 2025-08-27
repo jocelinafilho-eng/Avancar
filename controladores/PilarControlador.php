@@ -41,21 +41,29 @@ class PilarControlador {
 
     public function criar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json');
             $this->pilar_modelo->usuario_id = $_SESSION['usuario_id'];
             $this->pilar_modelo->nome = $_POST['nome'];
             $this->pilar_modelo->tipo = 'opcional'; // Por enquanto, apenas opcional
             $this->pilar_modelo->cor = $_POST['cor'];
 
-            if ($this->pilar_modelo->criar()) {
-                $_SESSION['flash_message'] = [
-                    'tipo' => 'sucesso',
-                    'mensagem' => 'Pilar criado com sucesso!'
-                ];
-                header('Location: /pilares');
-                exit();
+            $novo_pilar_id = $this->pilar_modelo->criar();
+
+            if ($novo_pilar_id) {
+                echo json_encode([
+                    'sucesso' => true,
+                    'pilar' => [
+                        'id' => $novo_pilar_id,
+                        'nome' => $this->pilar_modelo->nome,
+                        'tipo' => $this->pilar_modelo->tipo,
+                        'cor' => $this->pilar_modelo->cor,
+                        'categorias' => []
+                    ]
+                ]);
             } else {
-                $this->render('pilares', ['erro' => 'Erro ao criar pilar.']);
+                echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar pilar.']);
             }
+            exit();
         }
     }
 

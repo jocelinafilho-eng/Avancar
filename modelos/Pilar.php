@@ -43,7 +43,7 @@ class Pilar {
         $stmt->bindParam(':cor', $this->cor);
 
         if ($stmt->execute()) {
-            return true;
+            return $this->conexao->lastInsertId();
         }
 
         printf("Erro: %s.\n", $stmt->error);

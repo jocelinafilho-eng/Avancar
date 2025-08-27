@@ -37,7 +37,7 @@ class Categoria {
         $stmt->bindParam(':nome', $this->nome);
 
         if ($stmt->execute()) {
-            return true;
+            return $this->conexao->lastInsertId();
         }
 
         printf("Erro: %s.\n", $stmt->error);

@@ -31,13 +31,13 @@
             <h3><i class="fas fa-grip-horizontal"></i> Arraste para os dias</h3>
         </div>
         <div class="card-body calendario-semanal">
-            <div class="dia"><h4>Segunda</h4></div>
-            <div class="dia"><h4>Terça</h4></div>
-            <div class="dia"><h4>Quarta</h4></div>
-            <div class="dia"><h4>Quinta</h4></div>
-            <div class="dia"><h4>Sexta</h4></div>
-            <div class="dia"><h4>Sábado</h4></div>
-            <div class="dia"><h4>Domingo</h4></div>
+            <div class="dia"><h4>Segunda</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="monday">+</button></div>
+            <div class="dia"><h4>Terça</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="tuesday">+</button></div>
+            <div class="dia"><h4>Quarta</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="wednesday">+</button></div>
+            <div class="dia"><h4>Quinta</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="thursday">+</button></div>
+            <div class="dia"><h4>Sexta</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="friday">+</button></div>
+            <div class="dia"><h4>Sábado</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="saturday">+</button></div>
+            <div class="dia"><h4>Domingo</h4><button class="btn btn-pequeno btn-add-tarefa" data-dia="sunday">+</button></div>
         </div>
     </div>
 </div>
@@ -49,3 +49,14 @@
 .lista-micrometas ul { list-style: none; padding: 0; }
 .lista-micrometas li { background: var(--fundo-secundario); padding: 8px; margin-bottom: 8px; border-radius: 4px; cursor: grab; }
 </style>
+
+<script>
+document.querySelectorAll('.btn-add-tarefa').forEach(button => {
+    button.addEventListener('click', function() {
+        const dia = this.dataset.dia;
+        // Lógica para abrir o modal de criação de tarefa
+        // com o dia pré-selecionado.
+        alert('Adicionar tarefa para ' + dia);
+    });
+});
+</script>

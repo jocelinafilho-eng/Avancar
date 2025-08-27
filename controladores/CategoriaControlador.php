@@ -16,17 +16,25 @@ class CategoriaControlador {
 
     public function criar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            header('Content-Type: application/json');
             $this->categoria_modelo->pilar_id = $_POST['pilar_id'];
             $this->categoria_modelo->nome = $_POST['nome'];
 
-            if ($this->categoria_modelo->criar()) {
-                header('Location: /pilares'); // Redireciona de volta para a página de pilares
-                exit();
+            $nova_categoria_id = $this->categoria_modelo->criar();
+
+            if ($nova_categoria_id) {
+                echo json_encode([
+                    'sucesso' => true,
+                    'categoria' => [
+                        'id' => $nova_categoria_id,
+                        'nome' => $this->categoria_modelo->nome,
+                        'subcategorias' => []
+                    ]
+                ]);
             } else {
-                // TODO: Melhorar tratamento de erro
-                header('Location: /pilares?erro=criar_categoria');
-                exit();
+                echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar categoria.']);
             }
+            exit();
         }
     }
 }
