@@ -2,7 +2,6 @@
 
 class OnboardingControlador {
     private $db;
-    private $pilar_modelo;
 
     public function __construct() {
         if (!isset($_SESSION['usuario_id'])) {
@@ -11,10 +10,6 @@ class OnboardingControlador {
         }
         $database = BaseDados::obterInstancia();
         $this->db = $database->getConexao();
-        $this->pilar_modelo = new Pilar($this->db);
-
-        // TODO: Adicionar lógica para verificar se o onboarding já foi concluído
-        // e redirecionar para o dashboard caso tenha sido.
     }
 
     public function index() {
@@ -29,22 +24,60 @@ class OnboardingControlador {
             $pilares_opcionais = $_POST['pilares_opcionais'] ?? [];
 
             foreach ($pilares_obrigatorios as $nome_pilar) {
-                $this->pilar_modelo->usuario_id = $usuario_id;
-                $this->pilar_modelo->nome = $nome_pilar;
-                $this->pilar_modelo->tipo = 'obrigatorio';
-                $this->pilar_modelo->cor = '#cccccc'; // Cor padrão
-                $this->pilar_modelo->criar();
+                $pilar = new Pilar($this->db);
+                $pilar->usuario_id = $usuario_id;
+                $pilar->nome = $nome_pilar;
+                $pilar->tipo = 'obrigatorio';
+                $pilar->cor = '#cccccc'; // Cor padrão
+                $pilar->criar();
             }
 
             foreach ($pilares_opcionais as $nome_pilar) {
-                $this->pilar_modelo->usuario_id = $usuario_id;
-                $this->pilar_modelo->nome = $nome_pilar;
-                $this->pilar_modelo->tipo = 'opcional';
-                $this->pilar_modelo->cor = '#6b46c1'; // Cor padrão para opcionais
-                $this->pilar_modelo->criar();
+                $pilar = new Pilar($this->db);
+                $pilar->usuario_id = $usuario_id;
+                $pilar->nome = $nome_pilar;
+                $pilar->tipo = 'opcional';
+                $pilar->cor = '#6b46c1'; // Cor padrão para opcionais
+                $pilar->criar();
             }
 
-            // TODO: Marcar onboarding como concluído no banco de dados
+            // Criar hierarquia padrão para tarefas avulsas
+            $pilar_geral = new Pilar($this->db);
+            $pilar_geral->usuario_id = $usuario_id;
+            $pilar_geral->nome = 'Geral';
+            $pilar_geral->tipo = 'obrigatorio';
+            $pilar_geral->cor = '#808080';
+            $pilar_geral_id = $pilar_geral->criar();
+
+            if ($pilar_geral_id) {
+                $categoria_geral = new Categoria($this->db);
+                $categoria_geral->pilar_id = $pilar_geral_id;
+                $categoria_geral->nome = 'Tarefas Diárias';
+                $categoria_geral_id = $categoria_geral->criar();
+
+                if ($categoria_geral_id) {
+                    $meta_geral = new Meta($this->db);
+                    $meta_geral->usuario_id = $usuario_id;
+                    $meta_geral->categoria_id = $categoria_geral_id;
+                    $meta_geral->nome = 'Metas Gerais';
+                    $meta_geral->data_inicio = date('Y-m-d');
+                    $meta_geral->data_fim = date('Y-m-d', strtotime('+5 years'));
+                    $meta_geral_id = $meta_geral->criar();
+
+                    if ($meta_geral_id) {
+                        $micrometa_geral = new MicroMeta($this->db);
+                        $micrometa_geral->meta_id = $meta_geral_id;
+                        $micrometa_geral->nome = 'Tarefas Avulsas';
+                        $micrometa_geral->data_inicio = date('Y-m-d');
+                        $micrometa_geral->data_fim = date('Y-m-d', strtotime('+5 years'));
+                        $micrometa_geral->criar();
+                    }
+                }
+            }
+
+            // Marcar onboarding como concluído
+            $usuario_modelo = new Usuario($this->db);
+            $usuario_modelo->marcarOnboardingConcluido($usuario_id);
 
             header('Location: /dashboard');
             exit();
@@ -53,7 +86,6 @@ class OnboardingControlador {
 
     private function render($view, $data = []) {
         $data['view'] = $view;
-        // O layout principal é adequado por enquanto
-        include_once ROOT_PATH . '/vistas/layouts/principal.php';
+        include_once ROOT_PATH . '/vistas/layouts/onboarding.php';
     }
 }

@@ -7,6 +7,7 @@ class Pilar {
     public $id;
     public $usuario_id;
     public $nome;
+    public $descricao;
     public $tipo;
     public $cor;
     public $data_criacao;
@@ -16,7 +17,7 @@ class Pilar {
     }
 
     public function lerPorUsuario($usuario_id) {
-        $query = "SELECT id, nome, tipo, cor FROM " . $this->tabela . " WHERE usuario_id = :usuario_id ORDER BY nome ASC";
+        $query = "SELECT id, nome, descricao, tipo, cor FROM " . $this->tabela . " WHERE usuario_id = :usuario_id ORDER BY nome ASC";
 
         $stmt = $this->conexao->prepare($query);
         $stmt->bindParam(':usuario_id', $usuario_id);
@@ -26,19 +27,20 @@ class Pilar {
     }
 
     public function criar() {
-        $query = "INSERT INTO " . $this->tabela . " SET usuario_id = :usuario_id, nome = :nome, tipo = :tipo, cor = :cor";
+        $query = "INSERT INTO " . $this->tabela . " SET usuario_id = :usuario_id, nome = :nome, descricao = :descricao, tipo = :tipo, cor = :cor";
 
         $stmt = $this->conexao->prepare($query);
 
         // Sanitização
         $this->nome = htmlspecialchars(strip_tags($this->nome));
+        $this->descricao = htmlspecialchars(strip_tags($this->descricao));
         $this->tipo = htmlspecialchars(strip_tags($this->tipo));
         $this->cor = htmlspecialchars(strip_tags($this->cor));
-        $this->usuario_id = htmlspecialchars(strip_tags($this->usuario_id));
 
         // Bind dos parâmetros
         $stmt->bindParam(':usuario_id', $this->usuario_id);
         $stmt->bindParam(':nome', $this->nome);
+        $stmt->bindParam(':descricao', $this->descricao);
         $stmt->bindParam(':tipo', $this->tipo);
         $stmt->bindParam(':cor', $this->cor);
 

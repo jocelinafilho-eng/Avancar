@@ -12,9 +12,14 @@ class DiaControlador {
         $database = BaseDados::obterInstancia();
         $this->db = $database->getConexao();
         $this->tarefa_modelo = new Tarefa($this->db);
+        $this->pilar_modelo = new Pilar($this->db);
+        $this->categoria_modelo = new Categoria($this->db);
+        $this->meta_modelo = new Meta($this->db);
+        $this->micrometa_modelo = new MicroMeta($this->db);
     }
 
     public function index() {
+        // Buscar tarefas do dia
         $hoje = date('Y-m-d');
         $tarefas = $this->tarefa_modelo->lerPorDia($_SESSION['usuario_id'], $hoje);
 
@@ -41,7 +46,29 @@ class DiaControlador {
             return strcmp($a['hora_inicio'], $b['hora_inicio']);
         });
 
-        $this->render('dia', ['tarefas' => $tarefas_organizadas]);
+        // Buscar hierarquia completa para o formulário
+        $pilares = $this->pilar_modelo->lerPorUsuario($_SESSION['usuario_id'])->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($pilares as $p_key => $pilar) {
+            $categorias = $this->categoria_modelo->lerPorPilar($pilar['id'])->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($categorias as $c_key => $categoria) {
+                $metas = $this->meta_modelo->lerPorCategoria($categoria['id'])->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($metas as $m_key => $meta) {
+                    $micrometas = $this->micrometa_modelo->lerPorMeta($meta['id'])->fetchAll(PDO::FETCH_ASSOC);
+                    $metas[$m_key]['micrometas'] = $micrometas;
+                }
+                $categorias[$c_key]['metas'] = $metas;
+            }
+            $pilares[$p_key]['categorias'] = $categorias;
+        }
+
+        $dados = [
+            'tarefas' => $tarefas_organizadas,
+            'pilares' => $pilares, // Passa a hierarquia completa para a view
+            'titulo_pagina' => 'Página do Dia',
+            'icone_pagina' => 'fas fa-calendar-day'
+        ];
+
+        $this->render('dia', $dados);
     }
 
     private function render($view, $data = []) {

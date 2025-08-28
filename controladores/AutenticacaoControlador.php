@@ -44,9 +44,16 @@ class AutenticacaoControlador {
         $usuario = $this->usuario_modelo->encontrarPorEmail($email);
 
         if ($usuario && password_verify($palavra_passe, $usuario['palavra_passe'])) {
+            // Sessão do usuário
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_nome'] = $usuario['nome'];
-            header('Location: /dashboard');
+
+            // Redirecionamento baseado no status do onboarding
+            if ($usuario['onboarding_concluido'] == 0) {
+                header('Location: /onboarding');
+            } else {
+                header('Location: /dashboard');
+            }
             exit();
         } else {
             // Erro de login

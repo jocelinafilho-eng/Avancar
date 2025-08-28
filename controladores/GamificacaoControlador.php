@@ -21,11 +21,14 @@ class GamificacaoControlador {
         // Adicionar um método para buscar badges do usuário
         // $badges = $this->gamificacao_modelo->lerBadgesPorUsuario($_SESSION['usuario_id']);
 
-        $this->render('gamificacao', [
+        $dados = [
             'pontos' => $usuario_info['pontos'] ?? 0,
             'nivel' => $usuario_info['nivel'] ?? 1,
-            'badges' => [] // Mock por enquanto
-        ]);
+            'badges' => [], // Mock por enquanto
+            'titulo_pagina' => 'Gamificação',
+            'icone_pagina' => 'fas fa-trophy'
+        ];
+        $this->render('gamificacao', $dados);
     }
 
     private function render($view, $data = []) {

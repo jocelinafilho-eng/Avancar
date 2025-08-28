@@ -87,20 +87,30 @@ class Tarefa {
         return false;
     }
 
-    public function lerPorMes($usuario_id, $mes, $ano) {
+    public function lerPorMes($usuario_id, $mes, $ano, $meta_id = null) {
         $query = "
             SELECT t.data_execucao, COUNT(t.id) as num_tarefas
             FROM " . $this->tabela . " t
             JOIN micrometa mm ON t.micrometa_id = mm.id
             JOIN meta m ON mm.meta_id = m.id
             WHERE m.usuario_id = :usuario_id AND MONTH(t.data_execucao) = :mes AND YEAR(t.data_execucao) = :ano
-            GROUP BY t.data_execucao
         ";
+
+        if ($meta_id) {
+            $query .= " AND m.id = :meta_id";
+        }
+
+        $query .= " GROUP BY t.data_execucao";
 
         $stmt = $this->conexao->prepare($query);
         $stmt->bindParam(':usuario_id', $usuario_id);
         $stmt->bindParam(':mes', $mes);
         $stmt->bindParam(':ano', $ano);
+
+        if ($meta_id) {
+            $stmt->bindParam(':meta_id', $meta_id, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         return $stmt;

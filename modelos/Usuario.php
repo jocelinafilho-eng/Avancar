@@ -48,12 +48,28 @@ class Usuario {
     }
 
     public function encontrarPorId($id) {
-        $query = "SELECT id, nome, email, pontos, nivel FROM " . $this->tabela . " WHERE id = :id LIMIT 1";
+        $query = "SELECT * FROM " . $this->tabela . " WHERE id = :id LIMIT 1";
 
         $stmt = $this->conexao->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function marcarOnboardingConcluido($usuario_id) {
+        $query = "UPDATE " . $this->tabela . " SET onboarding_concluido = 1 WHERE id = :id";
+
+        $stmt = $this->conexao->prepare($query);
+
+        $usuario_id = htmlspecialchars(strip_tags($usuario_id));
+
+        $stmt->bindParam(':id', $usuario_id, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return true;
+        }
+
+        return false;
     }
 }

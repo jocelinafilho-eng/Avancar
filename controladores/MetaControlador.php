@@ -29,7 +29,13 @@ class MetaControlador {
         $pilares = $this->pilar_modelo->lerPorUsuario($_SESSION['usuario_id'])->fetchAll(PDO::FETCH_ASSOC);
         // ... (lógica para buscar categorias e subcategorias e passar para a view)
 
-        $this->render('metas', ['metas' => $metas, 'pilares' => $pilares]);
+        $dados = [
+            'metas' => $metas,
+            'pilares' => $pilares,
+            'titulo_pagina' => 'Metas',
+            'icone_pagina' => 'fas fa-bullseye'
+        ];
+        $this->render('metas', $dados);
     }
 
     public function criar() {

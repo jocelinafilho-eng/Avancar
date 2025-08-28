@@ -10,7 +10,11 @@ class ConfiguracaoControlador {
     }
 
     public function index() {
-        $this->render('configuracoes');
+        $dados = [
+            'titulo_pagina' => 'Configurações',
+            'icone_pagina' => 'fas fa-cog'
+        ];
+        $this->render('configuracoes', $dados);
     }
 
     private function render($view, $data = []) {

@@ -47,43 +47,6 @@ function iniciarGestorDeTarefasDoDia() {
         }
     });
 
-    // Listener para o formulário de nova tarefa
-    const formNovaTarefa = document.getElementById('form-nova-tarefa');
-    if (formNovaTarefa) {
-        formNovaTarefa.addEventListener('submit', function(event) {
-            event.preventDefault();
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const formData = new FormData(this);
-
-            // Desativar botão e mostrar spinner (já feito pelo script global, mas reforçamos)
-            submitBtn.disabled = true;
-            submitBtn.classList.add('a-processar');
-
-            fetch('/tarefa/criarParaHoje', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sucesso) {
-                    adicionarTarefaNaLista(data.tarefa);
-                    this.reset(); // Limpa o formulário
-                    mostrarAlertaSucesso('Tarefa adicionada!');
-                } else {
-                    mostrarAlertaErro(data.erro || 'Não foi possível adicionar a tarefa.');
-                }
-            })
-            .catch(() => mostrarAlertaErro('Erro de comunicação com o servidor.'))
-            .finally(() => {
-                // Re-ativar o botão
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('a-processar');
-                // Resetar campos condicionais
-                document.getElementById('tipo-temporal').dispatchEvent(new Event('change'));
-            });
-        });
-    }
-
     // Listener para os botões de remover tarefa
     document.body.addEventListener('click', function(event) {
         if (event.target.matches('.btn-remover-tarefa')) {
@@ -141,9 +104,9 @@ function iniciarGestorDeTarefasDoDia() {
                 camposHoraMarcada.style.display = 'block';
             }
         });
-        // Dispara o evento uma vez para acertar o estado inicial
         tipoTemporalSelect.dispatchEvent(new Event('change'));
     }
+
 }
 
 function adicionarTarefaNaLista(tarefa) {

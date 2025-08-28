@@ -12,13 +12,16 @@ class CalendarioControlador {
         $database = BaseDados::obterInstancia();
         $this->db = $database->getConexao();
         $this->tarefa_modelo = new Tarefa($this->db);
+        $this->meta_modelo = new Meta($this->db);
     }
 
     public function index() {
         $mes = isset($_GET['mes']) ? (int)$_GET['mes'] : date('m');
         $ano = isset($_GET['ano']) ? (int)$_GET['ano'] : date('Y');
+        $meta_id = isset($_GET['meta_id']) && !empty($_GET['meta_id']) ? (int)$_GET['meta_id'] : null;
 
-        $stmt = $this->tarefa_modelo->lerPorMes($_SESSION['usuario_id'], $mes, $ano);
+        // Buscar tarefas para o calendário
+        $stmt = $this->tarefa_modelo->lerPorMes($_SESSION['usuario_id'], $mes, $ano, $meta_id);
         $tarefas_raw = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $tarefas = [];
@@ -27,11 +30,19 @@ class CalendarioControlador {
             $tarefas[$dia] = $t['num_tarefas'];
         }
 
-        $this->render('calendario', [
+        // Buscar todas as metas para o filtro
+        $metas_filtro = $this->meta_modelo->lerPorUsuario($_SESSION['usuario_id'])->fetchAll(PDO::FETCH_ASSOC);
+
+        $dados = [
             'mes' => $mes,
             'ano' => $ano,
-            'tarefas' => $tarefas
-        ]);
+            'tarefas' => $tarefas,
+            'metas_filtro' => $metas_filtro,
+            'meta_id_selecionada' => $meta_id,
+            'titulo_pagina' => 'Calendário',
+            'icone_pagina' => 'fas fa-calendar-alt'
+        ];
+        $this->render('calendario', $dados);
     }
 
     private function render($view, $data = []) {

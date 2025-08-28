@@ -33,9 +33,12 @@ class ProgressoControlador {
             $dados_grafico['cores'][] = $stat['cor'];
         }
 
-        $this->render('progresso', [
-            'dados_grafico' => $dados_grafico
-        ]);
+        $dados = [
+            'dados_grafico' => $dados_grafico,
+            'titulo_pagina' => 'Progresso e Análise',
+            'icone_pagina' => 'fas fa-chart-line'
+        ];
+        $this->render('progresso', $dados);
     }
 
     private function render($view, $data = []) {

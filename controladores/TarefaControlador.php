@@ -89,12 +89,18 @@ class TarefaControlador {
         $this->tarefa_modelo->hora_inicio = !empty($_POST['hora_inicio']) ? $_POST['hora_inicio'] : null;
         $this->tarefa_modelo->duracao_estimada = !empty($_POST['duracao_estimada']) ? $_POST['duracao_estimada'] : 30;
         $this->tarefa_modelo->data_execucao = $_POST['data_execucao'];
+        $this->tarefa_modelo->micrometa_id = $_POST['micrometa_id'] ?? null;
+        $this->tarefa_modelo->nome = $_POST['nome'];
+        $this->tarefa_modelo->tipo_temporal = $_POST['tipo_temporal'];
+        $this->tarefa_modelo->periodo = !empty($_POST['periodo']) ? $_POST['periodo'] : null;
+        $this->tarefa_modelo->hora_inicio = !empty($_POST['hora_inicio']) ? $_POST['hora_inicio'] : null;
+        $this->tarefa_modelo->duracao_estimada = !empty($_POST['duracao_estimada']) ? $_POST['duracao_estimada'] : 30;
+        $this->tarefa_modelo->data_execucao = $_POST['data_execucao'];
         $this->tarefa_modelo->usuario_id = $_SESSION['usuario_id'];
-        $this->tarefa_modelo->micrometa_id = null; // Tarefas do dia não estão ligadas a micrometas por agora
 
         // Validação básica
-        if (empty($this->tarefa_modelo->nome) || empty($this->tarefa_modelo->tipo_temporal) || empty($this->tarefa_modelo->data_execucao)) {
-            echo json_encode(['sucesso' => false, 'erro' => 'Dados incompletos.']);
+        if (empty($this->tarefa_modelo->micrometa_id) || empty($this->tarefa_modelo->nome) || empty($this->tarefa_modelo->tipo_temporal) || empty($this->tarefa_modelo->data_execucao)) {
+            echo json_encode(['sucesso' => false, 'erro' => 'Dados incompletos. A tarefa deve estar associada a uma micro-meta.']);
             exit();
         }
 

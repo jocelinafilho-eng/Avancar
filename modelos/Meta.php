@@ -28,6 +28,16 @@ class Meta {
         return $stmt;
     }
 
+    public function lerPorCategoria($categoria_id) {
+        $query = "SELECT * FROM " . $this->tabela . " WHERE categoria_id = :categoria_id ORDER BY data_fim ASC";
+
+        $stmt = $this->conexao->prepare($query);
+        $stmt->bindParam(':categoria_id', $categoria_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt;
+    }
+
     public function criar() {
         $query = "INSERT INTO " . $this->tabela . " SET usuario_id = :usuario_id, categoria_id = :categoria_id, subcategoria_id = :subcategoria_id, nome = :nome, data_inicio = :data_inicio, data_fim = :data_fim";
 

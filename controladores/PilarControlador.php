@@ -36,30 +36,41 @@ class PilarControlador {
             $pilares[$key]['categorias'] = $categorias;
         }
 
-        $this->render('pilares', ['pilares' => $pilares]);
+        $dados = [
+            'pilares' => $pilares,
+            'titulo_pagina' => 'Pilares e Categorias',
+            'icone_pagina' => 'fas fa-stream'
+        ];
+        $this->render('pilares', $dados);
     }
 
     public function criar() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Content-Type: application/json');
             $this->pilar_modelo->usuario_id = $_SESSION['usuario_id'];
-            $this->pilar_modelo->nome = $_POST['nome'];
-            $this->pilar_modelo->tipo = 'opcional'; // Por enquanto, apenas opcional
-            $this->pilar_modelo->cor = $_POST['cor'];
+            $this->pilar_modelo->nome = $_POST['nome'] ?? '';
+            $this->pilar_modelo->descricao = $_POST['descricao'] ?? '';
+            $this->pilar_modelo->tipo = 'opcional'; // Apenas pilares opcionais podem ser criados pela UI
+            $this->pilar_modelo->cor = $_POST['cor'] ?? '#cccccc';
+
+            if (empty($this->pilar_modelo->nome)) {
+                 echo json_encode(['sucesso' => false, 'mensagem' => 'O nome do pilar é obrigatório.']);
+                 exit();
+            }
 
             $novo_pilar_id = $this->pilar_modelo->criar();
 
             if ($novo_pilar_id) {
-                echo json_encode([
-                    'sucesso' => true,
-                    'pilar' => [
-                        'id' => $novo_pilar_id,
-                        'nome' => $this->pilar_modelo->nome,
-                        'tipo' => $this->pilar_modelo->tipo,
-                        'cor' => $this->pilar_modelo->cor,
-                        'categorias' => []
-                    ]
-                ]);
+                // Retornar o pilar completo para ser adicionado à UI
+                $pilar_criado = [
+                    'id' => $novo_pilar_id,
+                    'nome' => $this->pilar_modelo->nome,
+                    'descricao' => $this->pilar_modelo->descricao,
+                    'tipo' => $this->pilar_modelo->tipo,
+                    'cor' => $this->pilar_modelo->cor,
+                    'categorias' => [] // Um novo pilar não tem categorias
+                ];
+                echo json_encode(['sucesso' => true, 'pilar' => $pilar_criado]);
             } else {
                 echo json_encode(['sucesso' => false, 'mensagem' => 'Erro ao criar pilar.']);
             }

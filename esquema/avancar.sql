@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `usuario` (
   `data_registo` timestamp NOT NULL DEFAULT current_timestamp(),
   `pontos` int(11) NOT NULL DEFAULT 0,
   `nivel` int(11) NOT NULL DEFAULT 1,
+  `onboarding_concluido` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -34,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `pilar` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,
   `nome` varchar(100) NOT NULL,
+  `descricao` text DEFAULT NULL,
   `tipo` enum('obrigatorio','opcional') NOT NULL,
   `cor` varchar(7) DEFAULT '#ffffff',
   `data_criacao` timestamp NOT NULL DEFAULT current_timestamp(),

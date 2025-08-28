@@ -21,7 +21,12 @@ class PlaneamentoControlador {
         // mas idealmente seria refatorada para um serviço ou para os próprios modelos.
         // Por agora, manteremos simples.
 
-        $this->render('planeamento', ['metas' => $metas]);
+        $dados = [
+            'metas' => $metas,
+            'titulo_pagina' => 'Planeamento Semanal',
+            'icone_pagina' => 'fas fa-calendar-week'
+        ];
+        $this->render('planeamento', $dados);
     }
 
     public function salvar() {

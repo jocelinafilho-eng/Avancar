@@ -130,6 +130,21 @@ a:hover { color: var(--primaria-hover); }
     background-color: var(--hover-focus);
     color: var(--texto-principal);
 }
+
+/* Barra de Progresso Genérica */
+.barra-progresso {
+    width: 100%;
+    height: 8px;
+    background-color: var(--fundo-principal);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.barra-progresso-preenchimento {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
 .menu-toggle-btn i {
     transition: transform 0.3s ease-in-out;
 }
@@ -388,11 +403,55 @@ body.menu-recolhido .menu-link {
 .subcategoria-lista li:last-child { border-bottom: none; }
 
 /* Calendar */
-.calendario-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.calendario-header a { color: var(--primaria-hover); text-decoration: none; font-size: 1.5rem; padding: 0 16px; }
-.calendario-tabela { width: 100%; border-collapse: collapse; }
-.calendario-tabela th, .calendario-tabela td { text-align: center; padding: 16px; border: 1px solid var(--bordas-separadores); width: 14.28%; height: 100px; }
-.calendario-tabela td.tem-tarefas { background-color: var(--primaria); color: white; font-weight: bold; cursor: pointer; }
+.calendario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.calendario-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+.calendario-tabela {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+.calendario-tabela th, .calendario-tabela td {
+    text-align: center;
+    padding: 8px;
+    border: 1px solid var(--bordas-separadores);
+    height: 100px;
+    vertical-align: top;
+    font-weight: 500;
+}
+.calendario-tabela th {
+    height: auto;
+    padding: 12px 8px;
+    color: var(--texto-terciario);
+}
+.calendario-tabela td span {
+    display: block;
+}
+.calendario-tabela td.tem-tarefas span {
+    background-color: var(--primaria);
+    color: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    margin: 0 auto;
+}
+.calendario-tabela td.dia-atual {
+    border: 2px solid var(--primaria-hover);
+    background-color: var(--fundo-secundario);
+}
+.calendario-tabela td.dia-atual span {
+    font-weight: bold;
+    color: var(--primaria-hover);
+}
 
 /* Gamification */
 .gamificacao-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-bottom: 24px; }
@@ -449,4 +508,162 @@ body.menu-recolhido .menu-link {
     padding: 16px 0;
     text-align: center;
     font-style: italic;
+}
+
+/* ==========================================================================
+   6. ONBOARDING PAGE
+   ========================================================================== */
+.onboarding-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+}
+.onboarding-container {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+.onboarding-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.onboarding-header h1 {
+    font-size: 2.5rem;
+    color: var(--primaria);
+}
+.onboarding-header p {
+    font-size: 1.125rem;
+    color: var(--texto-terciario);
+    max-width: 600px;
+    margin: 16px auto 0;
+}
+.onboarding-section {
+    margin-bottom: 40px;
+}
+.onboarding-section h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--bordas-separadores);
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+}
+.onboarding-section p {
+    color: var(--texto-terciario);
+    margin-bottom: 24px;
+}
+.onboarding-footer {
+    text-align: center;
+    margin-top: 40px;
+}
+.btn-grande {
+    padding: 16px 32px;
+    font-size: 1.125rem;
+}
+
+.pilares-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+.pilar-card {
+    background: var(--fundo-secundario);
+    border: 1px solid var(--bordas-separadores);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.pilar-card input[type="checkbox"] {
+    display: none;
+}
+.pilar-card.clicavel {
+    cursor: pointer;
+}
+.pilar-card.clicavel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-color: var(--primaria);
+}
+.pilar-card.selecionado {
+    border-color: var(--primaria);
+    box-shadow: 0 0 0 2px var(--primaria);
+}
+.pilar-card.desativado {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+.pilar-card.desativado:hover {
+    transform: none;
+    box-shadow: none;
+}
+.pilar-card-cor {
+    width: 8px;
+    height: 60px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+.pilar-card-conteudo h3 {
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pilar-card-conteudo p {
+    margin: 0;
+    color: var(--texto-terciario);
+    font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   7. PILARES PAGE
+   ========================================================================== */
+.pilar-card-titulo {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.pilar-card-titulo h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.pilar-card-titulo small {
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+    width: fit-content;
+    margin-top: 4px;
+}
+.pilar-tipo-obrigatorio {
+    background-color: var(--texto-desabilitado);
+    color: var(--fundo-secundario);
+}
+.pilar-tipo-opcional {
+    background-color: var(--primaria);
+    color: white;
+}
+.pilar-descricao {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--texto-terciario);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--bordas-separadores);
+}
+.sem-dados {
+    color: var(--texto-terciario);
+    font-style: italic;
+}
+.swal2-textarea {
+    height: 100px !important;
+    font-family: inherit;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid var(--bordas-separadores);
+    background: var(--fundo-principal);
+    color: var(--texto-principal);
 }

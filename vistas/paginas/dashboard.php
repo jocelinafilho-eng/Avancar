@@ -48,25 +48,30 @@
 <div class="dashboard-pilares">
     <h3><i class="fas fa-columns"></i> Estatísticas por Pilar</h3>
     <div class="pilares-grid">
-        <!-- Placeholder para estatísticas dos pilares -->
-        <div class="card pilar-card">
-            <div class="card-body">
-                <h4>Saúde</h4>
-                <p>Nenhum progresso ainda.</p>
-            </div>
-        </div>
-        <div class="card pilar-card">
-            <div class="card-body">
-                <h4>Educação</h4>
-                <p>Nenhum progresso ainda.</p>
-            </div>
-        </div>
-        <div class="card pilar-card">
-            <div class="card-body">
-                <h4>Finanças</h4>
-                <p>Nenhum progresso ainda.</p>
-            </div>
-        </div>
-        <!-- Outros pilares aqui -->
+        <?php if (isset($stats_pilares) && count($stats_pilares) > 0): ?>
+            <?php foreach ($stats_pilares as $pilar_stat): ?>
+                <div class="card pilar-card" style="border-left: 4px solid <?php echo htmlspecialchars($pilar_stat['cor']); ?>">
+                    <div class="card-body">
+                        <h4><?php echo htmlspecialchars($pilar_stat['nome']); ?></h4>
+                        <p>
+                            <?php if ($pilar_stat['total_tarefas'] > 0): ?>
+                                <strong><?php echo $pilar_stat['tarefas_concluidas']; ?></strong> de
+                                <strong><?php echo $pilar_stat['total_tarefas']; ?></strong> tarefas concluídas.
+                            <?php else: ?>
+                                Nenhuma tarefa associada ainda.
+                            <?php endif; ?>
+                        </p>
+                        <?php
+                            $progresso = ($pilar_stat['total_tarefas'] > 0) ? ($pilar_stat['tarefas_concluidas'] / $pilar_stat['total_tarefas']) * 100 : 0;
+                        ?>
+                        <div class="barra-progresso">
+                            <div class="barra-progresso-preenchimento" style="width: <?php echo $progresso; ?>%; background-color: <?php echo htmlspecialchars($pilar_stat['cor']); ?>;"></div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p class="sem-dados">Nenhuma estatística de pilar para mostrar. Comece a adicionar metas e tarefas!</p>
+        <?php endif; ?>
     </div>
 </div>
